@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ebola Disease Prediction System - Complete Project Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a1a2e; line-height: 1.7; }
+  .cover {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white; text-align: center; padding: 80px 40px; min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .cover .virus { font-size: 80px; margin-bottom: 20px; }
+  .cover h1 { font-size: 42px; font-weight: 900; letter-spacing: 2px; margin-bottom: 10px; color: #e94560; }
+  .cover h2 { font-size: 22px; font-weight: 300; color: #a8dadc; margin-bottom: 30px; }
+  .cover .badges { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+  .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); 
+           border-radius: 20px; padding: 6px 16px; font-size: 13px; color: #fff; }
+  .cover .divider { width: 80px; height: 4px; background: #e94560; margin: 20px auto; border-radius: 2px; }
+  .cover p { font-size: 16px; color: #a8dadc; max-width: 600px; }
+
+  .page { padding: 60px 50px; max-width: 1100px; margin: 0 auto; }
+  .section { background: white; border-radius: 16px; padding: 40px; margin-bottom: 35px;
+             box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .section-title {
+    font-size: 26px; font-weight: 800; color: #0f3460; margin-bottom: 25px;
+    border-left: 5px solid #e94560; padding-left: 15px;
+  }
+  .section-subtitle { font-size: 18px; font-weight: 700; color: #16213e; margin: 25px 0 12px; }
+  p { margin-bottom: 14px; color: #333; }
+
+  /* Diagram styles */
+  .diagram {
+    background: #0f1923; border-radius: 12px; padding: 30px;
+    font-family: 'Courier New', monospace; color: #00ff88; font-size: 13px;
+    line-height: 1.8; margin: 20px 0; overflow-x: auto;
+  }
+  .diagram .title { color: #e94560; font-weight: bold; font-size: 15px; text-align: center; margin-bottom: 15px; }
+  .diagram .yellow { color: #ffd700; }
+  .diagram .cyan { color: #00cfff; }
+  .diagram .orange { color: #ff8c00; }
+  .diagram .pink { color: #ff69b4; }
+  .diagram .white { color: #ffffff; }
+
+  /* Flow boxes */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+  .flow-box {
+    background: linear-gradient(135deg, #0f3460, #16213e);
+    color: white; padding: 14px 22px; border-radius: 10px; font-weight: 600;
+    font-size: 13px; text-align: center; min-width: 120px; flex: 1;
+    border: 2px solid #e94560;
+  }
+  .flow-box.green { background: linear-gradient(135deg, #1a5c38, #27ae60); border-color: #2ecc71; }
+  .flow-box.red { background: linear-gradient(135deg, #7b1a1a, #c0392b); border-color: #e74c3c; }
+  .flow-box.blue { background: linear-gradient(135deg, #0f3460, #2980b9); border-color: #3498db; }
+  .flow-box.orange { background: linear-gradient(135deg, #7a4000, #e67e22); border-color: #f39c12; }
+  .arrow { font-size: 22px; color: #e94560; font-weight: bold; flex-shrink: 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 14px; }
+  th { background: linear-gradient(135deg, #0f3460, #16213e); color: white; padding: 12px 16px; text-align: left; }
+  td { padding: 11px 16px; border-bottom: 1px solid #e8eef4; }
+  tr:nth-child(even) td { background: #f8fafd; }
+  tr:hover td { background: #eef2ff; }
+
+  /* Cards grid */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+  .card {
+    border-radius: 12px; padding: 25px; color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+  .card h3 { font-size: 16px; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: rgba(255,255,255,0.85); margin: 0; }
+  .card.c1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .card.c2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .card.c3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .card.c4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+  .card.c5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+  .card.c6 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+
+  /* Q&A styles */
+  .qa { margin-bottom: 28px; border-radius: 12px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+  .question {
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+    color: white; padding: 18px 22px; font-weight: 700; font-size: 15px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .question .qnum {
+    background: #e94560; color: white; border-radius: 50%; width: 30px; height: 30px;
+    min-width: 30px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900;
+  }
+  .answer {
+    background: #f8fafd; padding: 18px 22px; border-left: 4px solid #e94560;
+    font-size: 14px; color: #2c3e50;
+  }
+  .answer .key { background: #fff3cd; border-radius: 6px; padding: 10px 14px; 
+                  margin-top: 10px; font-size: 13px; border-left: 3px solid #f39c12; }
+  .answer code {
+    background: #1a1a2e; color: #00ff88; padding: 2px 8px; border-radius: 4px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+  }
+  .answer pre {
+    background: #1a1a2e; color: #00ff88; padding: 15px; border-radius: 8px;
+    font-size: 12px; overflow-x: auto; margin-top: 10px; line-height: 1.6;
+  }
+
+  /* Highlight box */
+  .highlight { background: linear-gradient(135deg, #667eea22, #764ba222); border: 2px solid #667eea;
+               border-radius: 10px; padding: 18px; margin: 15px 0; }
+  .highlight.warning { background: #fff3cd33; border-color: #f39c12; }
+  .highlight.success { background: #d4edda33; border-color: #27ae60; }
+  .highlight.danger  { background: #f8d7da33; border-color: #e74c3c; }
+
+  /* ML model boxes */
+  .ml-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+  .ml-card { border-radius: 12px; padding: 22px; border: 2px solid; }
+  .ml-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  .ml-card ul { font-size: 13px; padding-left: 18px; }
+  .ml-card li { margin-bottom: 5px; }
+  .ml-card.svm { border-color: #3498db; background: #ebf5fb; }
+  .ml-card.rf  { border-color: #27ae60; background: #eafaf1; }
+  .ml-card.lr  { border-color: #9b59b6; background: #f5eef8; }
+  .ml-card.dt  { border-color: #e67e22; background: #fef9e7; }
+  .ml-card.vc  { border-color: #e94560; background: #fdf2f8; }
+
+  /* Stats bar */
+  .stat-bar { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+  .stat { flex: 1; min-width: 140px; background: linear-gradient(135deg, #0f3460, #16213e);
+           color: white; border-radius: 12px; padding: 20px; text-align: center; }
+  .stat .num { font-size: 32px; font-weight: 900; color: #e94560; }
+  .stat .label { font-size: 12px; color: #a8dadc; margin-top: 4px; }
+
+  /* Page break */
+  .page-break { page-break-before: always; }
+
+  /* Category label */
+  .cat-label {
+    display: inline-block; background: #e94560; color: white;
+    border-radius: 20px; padding: 4px 14px; font-size: 12px;
+    font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  /* Footer */
+  .footer { text-align: center; color: #888; font-size: 13px; padding: 40px; }
+
+  @media print {
+    body { background: white; }
+    .page { padding: 30px; }
+    .section { box-shadow: none; border: 1px solid #ddd; }
+    .cover { min-height: auto; padding: 60px 40px; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="virus">🦠</div>
+  <h1>EBOLA DISEASE PREDICTION SYSTEM</h1>
+  <div class="divider"></div>
+  <h2>Complete Project Guide · Interview Preparation · Technical Deep Dive</h2>
+  <p>A Machine Learning–powered web application for early detection of Ebola Virus Disease using Ensemble Learning deployed via Django with HTTPS security.</p>
+  <div class="badges">
+    <span class="badge">🐍 Python 3.13</span>
+    <span class="badge">🌐 Django 5.2</span>
+    <span class="badge">🤖 Ensemble ML</span>
+    <span class="badge">🔒 HTTPS / SSL</span>
+    <span class="badge">42 Features</span>
+    <span class="badge">VotingClassifier</span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 1: PROJECT OVERVIEW                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">1. Project Overview</div>
+
+  <p><strong>Ebola Virus Disease (EVD)</strong> is one of the world's most deadly hemorrhagic fevers, with fatality rates up to 90%. Traditional diagnosis requires lab tests that take hours — time that can cost lives during an outbreak. This project solves that problem by providing an <strong>instant AI-powered preliminary screening tool</strong>.</p>
+
+  <div class="stat-bar">
+    <div class="stat"><div class="num">42</div><div class="label">Input Features</div></div>
+    <div class="stat"><div class="num">4</div><div class="label">ML Models in Ensemble</div></div>
+    <div class="stat"><div class="num">31MB</div><div class="label">Model File Size</div></div>
+    <div class="stat"><div class="num">8443</div><div class="label">HTTPS Port</div></div>
+    <div class="stat"><div class="num">~ms</div><div class="label">Prediction Time</div></div>
+  </div>
+
+  <p>The system accepts <strong>42 clinical symptoms and contact history</strong> inputs from healthcare workers through a web form and predicts whether a patient is at <strong>High Risk (Positive)</strong> or <strong>Low Risk (Negative)</strong> for Ebola, along with a confidence percentage score.</p>
+
+  <div class="highlight success">
+    <strong>Core Value:</strong> Replace hours of lab waiting time with millisecond AI screening — enabling faster isolation, resource allocation, and contact tracing during outbreaks.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 2: HOW THE PROJECT WORKS - FULL FLOW  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">2. How the Project Works — Complete Data Flow</div>
+
+  <div class="section-subtitle">Step-by-Step Flow Diagram</div>
+  <div class="diagram">
+    <div class="title">═══ EBOLA PREDICTION SYSTEM — END TO END FLOW ═══</div>
+<pre class="white" style="background:transparent; color: #00ff88; padding:0;">
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │                      HEALTHCARE WORKER                              │
+  │                  (Browser on any device)                            │
+  └────────────────────────────┬────────────────────────────────────────┘
+                               │  HTTPS Request (port 8443)
+                               ▼
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │                  DJANGO WEB SERVER (runhttps)                       │
+  │                                                                     │
+  │   ┌──────────┐    ┌──────────────┐    ┌──────────────────────────┐ │
+  │   │ urls.py  │───▶│   views.py   │───▶│  ensemble_model.pkl      │ │
+  │   │          │    │              │    │  (loaded via joblib)     │ │
+  │   │ /        │    │  index()     │    └──────────────────────────┘ │
+  │   │ /predict │    │  predict()   │                                  │
+  │   └──────────┘    └──────────────┘                                  │
+  │                                                                     │
+  └────────────────────────────┬────────────────────────────────────────┘
+                               │
+              ┌────────────────▼─────────────────┐
+              │         INPUT FORM (42 Features)  │
+              │                                   │
+              │  SYMPTOMS:                        │
+              │  fever, nausea, diarrhoea,        │
+              │  bleeding, jaundice, coma...      │
+              │                                   │
+              │  CONTACT HISTORY:                 │
+              │  EVD case, funeral, hospital...   │
+              │                                   │
+              │  DEMOGRAPHICS:                    │
+              │  age, sex, profession             │
+              └────────────────┬─────────────────┘
+                               │  POST request
+                               ▼
+              ┌────────────────────────────────────┐
+              │     DATA PREPROCESSING             │
+              │                                    │
+              │  1. Extract 42 values from form    │
+              │  2. Convert to float array         │
+              │  3. Reshape to [1, 42] NumPy array │
+              └────────────────┬───────────────────┘
+                               │
+                               ▼
+              ┌────────────────────────────────────┐
+              │   ENSEMBLE MODEL (VotingClassifier)│
+              │                                    │
+              │   ┌──────┐ ┌──────┐ ┌──────┐      │
+              │   │ SVC  │ │  RF  │ │  LR  │ ┌──┐ │
+              │   │  ▼   │ │  ▼   │ │  ▼   │ │DT│ │
+              │   │ [1]  │ │ [0]  │ │ [1]  │ │▼ │ │
+              │   └──────┘ └──────┘ └──────┘ │[1]│ │
+              │       Votes: 3 Positive        └──┘ │
+              │       → MAJORITY = POSITIVE         │
+              └────────────────┬───────────────────┘
+                               │
+                               ▼
+              ┌────────────────────────────────────┐
+              │         PREDICTION OUTPUT          │
+              │                                    │
+              │   Result:     POSITIVE / NEGATIVE  │
+              │   Confidence: 87.5%                │
+              │   Message:    Seek medical help    │
+              └────────────────┬───────────────────┘
+                               │
+                               ▼
+              ┌────────────────────────────────────┐
+              │     HTML RESPONSE (index.html)     │
+              │   Color coded: RED / GREEN         │
+              │   Shows result + confidence        │
+              └────────────────────────────────────┘
+</pre>
+  </div>
+
+  <div class="section-subtitle">What Happens Inside views.py</div>
+  <div class="diagram">
+<pre style="background:transparent; color: #00ff88; padding:0;">
+<span class="cyan"># 1. MODEL LOADING (happens ONCE at server startup)</span>
+ensemble_model = joblib.load('models/ensemble_model.pkl')
+
+<span class="yellow"># 2. FEATURE EXTRACTION (on every POST request)</span>
+FEATURES = ['fever', 'nausea', 'diarrhoea', ... 42 total ...]
+
+input_data = []
+for feature in FEATURES:
+    val = request.POST.get(feature, 0)   <span class="orange"># get value from form</span>
+    input_data.append(float(val))         <span class="orange"># convert to float</span>
+
+<span class="yellow"># 3. RESHAPE FOR MODEL</span>
+input_array = np.array([input_data])     <span class="orange"># shape: (1, 42)</span>
+
+<span class="yellow"># 4. PREDICTION</span>
+prediction  = ensemble_model.predict(input_array)[0]       <span class="orange"># 0 or 1</span>
+proba       = ensemble_model.predict_proba(input_array)[0] <span class="orange"># [0.13, 0.87]</span>
+confidence  = round(max(proba) * 100, 2)                   <span class="orange"># 87.0%</span>
+
+<span class="yellow"># 5. RENDER RESULT</span>
+if prediction == 1:
+    result = 'Positive'   <span class="orange"># High Risk — RED</span>
+else:
+    result = 'Negative'   <span class="orange"># Low Risk — GREEN</span>
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 3: ENSEMBLE LEARNING DEEP DIVE        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section page-break">
+  <div class="section-title">3. Ensemble Learning — Deep Dive</div>
+
+  <p>Ensemble learning is a technique where <strong>multiple ML models are trained</strong> and their predictions are combined to produce a final, more accurate and robust output.</p>
+
+  <div class="diagram">
+    <div class="title">═══ ENSEMBLE LEARNING CONCEPT ═══</div>
+<pre style="background:transparent; color: #00ff88; padding:0;">
+                    42 FEATURES INPUT
+                          │
+          ┌───────────────┼───────────────┐
+          │               │               │               │
+          ▼               ▼               ▼               ▼
+     ┌─────────┐    ┌──────────┐   ┌──────────┐   ┌──────────┐
+     │   SVC   │    │ RANDOM   │   │LOGISTIC  │   │DECISION  │
+     │ Support │    │ FOREST   │   │REGRESSION│   │  TREE    │
+     │ Vector  │    │          │   │          │   │          │
+     │Classifier    │100 Trees │   │ Linear   │   │Rule-based│
+     └────┬────┘    └────┬─────┘   └────┬─────┘   └────┬─────┘
+          │               │               │               │
+          ▼               ▼               ▼               ▼
+       VOTE: 1          VOTE: 0         VOTE: 1         VOTE: 1
+       (Positive)       (Negative)      (Positive)      (Positive)
+          │               │               │               │
+          └───────────────┼───────────────┘───────────────┘
+                          │
+                          ▼
+                  ┌───────────────┐
+                  │VOTING RESULT  │
+                  │ 3 vs 1        │
+                  │ MAJORITY = 1  │
+                  │  (POSITIVE)   │
+                  └───────────────┘
+</pre>
+  </div>
+
+  <div class="section-subtitle">Why Ensemble? — Analogy</div>
+  <div class="highlight">
+    <strong>Think of it like a medical panel:</strong> Instead of one doctor diagnosing a patient, you consult 4 specialists. Each has their own expertise and perspective. The final decision is based on the <strong>majority opinion</strong> — this is far more reliable than any single doctor's opinion alone.
+  </div>
+
+  <div class="ml-grid">
+    <div class="ml-card svm">
+      <h3 style="color:#2980b9">1. SVC — Support Vector Classifier</h3>
+      <ul>
+        <li><strong>What it does:</strong> Finds the optimal hyperplane that best separates positive and negative cases in high-dimensional space</li>
+        <li><strong>Kernel:</strong> RBF (Radial Basis Function) for non-linear boundaries</li>
+        <li><strong>Preprocessing:</strong> Requires StandardScaler (sensitive to feature scale)</li>
+        <li><strong>Strength:</strong> Excellent with high-dimensional medical data</li>
+        <li><strong>Weakness:</strong> Slow on very large datasets; needs scaling</li>
+        <li><strong>Best for:</strong> Small-to-medium medical datasets with clear margins</li>
+      </ul>
+    </div>
+    <div class="ml-card rf">
+      <h3 style="color:#27ae60">2. Random Forest Classifier</h3>
+      <ul>
+        <li><strong>What it does:</strong> Builds 100+ Decision Trees on random subsets of data, averages their results</li>
+        <li><strong>Bootstrap Aggregating (Bagging):</strong> Each tree trained on different sample → reduces overfitting</li>
+        <li><strong>Feature Importance:</strong> Tells which symptoms matter most</li>
+        <li><strong>Strength:</strong> Handles missing values, non-linear data, robust to noise</li>
+        <li><strong>Weakness:</strong> Slower prediction, less interpretable</li>
+        <li><strong>Best for:</strong> Complex symptom interactions</li>
+      </ul>
+    </div>
+    <div class="ml-card lr">
+      <h3 style="color:#8e44ad">3. Logistic Regression</h3>
+      <ul>
+        <li><strong>What it does:</strong> Applies sigmoid function to predict probability of Ebola positive</li>
+        <li><strong>Formula:</strong> P(y=1) = 1 / (1 + e^(-wx+b))</li>
+        <li><strong>Output:</strong> Probability between 0 and 1</li>
+        <li><strong>Strength:</strong> Fast, interpretable, gives probability scores</li>
+        <li><strong>Weakness:</strong> Assumes linear relationship between features and outcome</li>
+        <li><strong>Best for:</strong> Baseline model, interpretable results</li>
+      </ul>
+    </div>
+    <div class="ml-card dt">
+      <h3 style="color:#d35400">4. Decision Tree Classifier</h3>
+      <ul>
+        <li><strong>What it does:</strong> Creates a tree of if-else rules based on symptoms</li>
+        <li><strong>Example:</strong> IF fever=1 AND bleeding=1 AND contact_EVD=1 → POSITIVE</li>
+        <li><strong>Split criteria:</strong> Gini impurity or entropy</li>
+        <li><strong>Strength:</strong> Highly interpretable, handles mixed data types</li>
+        <li><strong>Weakness:</strong> Prone to overfitting if not pruned</li>
+        <li><strong>Best for:</strong> Capturing complex symptom rule combinations</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ml-card vc" style="margin-top:20px">
+    <h3 style="color:#e94560; font-size:18px">5. VotingClassifier — The Ensemble Combiner</h3>
+    <p style="font-size:14px; margin: 10px 0;">VotingClassifier from scikit-learn combines all 4 models above. There are two voting types:</p>
+    <table>
+      <tr><th>Type</th><th>How It Works</th><th>When Used</th></tr>
+      <tr><td><strong>Hard Voting</strong></td><td>Each model votes for a class. Majority class wins. (3 vs 1 → Positive)</td><td>When models don't output probabilities</td></tr>
+      <tr><td><strong>Soft Voting</strong></td><td>Average predicted probabilities. Class with highest average probability wins.</td><td>When all models support predict_proba() — MORE ACCURATE</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 4: TECHNOLOGY STACK                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">4. Technology Stack — Deep Explanation</div>
+
+  <div class="card-grid">
+    <div class="card c1">
+      <h3>🐍 Python 3.13</h3>
+      <p>Core language. Chosen for its rich ML ecosystem (scikit-learn, NumPy, joblib), Django web framework, and rapid development capability.</p>
+    </div>
+    <div class="card c2">
+      <h3>🌐 Django 5.2.1</h3>
+      <p>Full-stack web framework. Handles URL routing, template rendering, form processing, CSRF protection, and the ORM for database access.</p>
+    </div>
+    <div class="card c3">
+      <h3>🤖 scikit-learn 1.9</h3>
+      <p>ML library. Provides VotingClassifier, SVC, RandomForestClassifier, LogisticRegression, DecisionTreeClassifier, StandardScaler, LabelEncoder.</p>
+    </div>
+    <div class="card c4">
+      <h3>📦 joblib</h3>
+      <p>Efficient model serialization. Saves trained ML model as .pkl file and loads it into memory at Django startup for fast inference.</p>
+    </div>
+    <div class="card c5">
+      <h3>🔢 NumPy</h3>
+      <p>Numerical computing. Converts form input list to a (1,42) shaped array required by scikit-learn's predict() and predict_proba() methods.</p>
+    </div>
+    <div class="card c6">
+      <h3>🔐 cryptography + ssl</h3>
+      <p>Generates self-signed X.509 SSL certificate with Subject Alternative Name (SAN). Python's ssl.SSLContext wraps the server socket for HTTPS.</p>
+    </div>
+  </div>
+
+  <div class="section-subtitle">Django Architecture — MVT Pattern</div>
+  <div class="diagram">
+<pre style="background:transparent; color: #00ff88; padding:0;">
+  REQUEST ──▶ urls.py ──▶ views.py (Controller + Model logic) ──▶ templates/ (View)
+                               │
+                               ├── Calls joblib.load() to get ML model
+                               ├── Processes form data with NumPy
+                               ├── Runs prediction
+                               └── Passes context dict to template
+
+  Django uses MVT (Model-View-Template) instead of MVC:
+  ┌──────────┐   ┌──────────┐   ┌──────────┐
+  │  Model   │   │   View   │   │ Template │
+  │(database)│   │(logic)   │   │  (HTML)  │
+  │models.py │   │views.py  │   │index.html│
+  └──────────┘   └──────────┘   └──────────┘
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 5: HTTPS / SECURITY                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section page-break">
+  <div class="section-title">5. HTTPS Implementation — How It Works</div>
+
+  <div class="diagram">
+<pre style="background:transparent; color: #00ff88; padding:0;">
+<span class="yellow">NORMAL HTTP:</span>
+  Browser ──── [sensitive patient data in plain text] ──▶ Server
+               ❌ Anyone on the network can read this!
+
+<span class="yellow">HTTPS (our implementation):</span>
+  Browser ──── [🔒 encrypted data] ──▶ SSL Context ──▶ Server
+               ✅ Data is encrypted, unreadable to interceptors
+
+HOW SSL HANDSHAKE WORKS:
+  1. Browser connects to server on port 8443
+  2. Server sends SSL Certificate (server.crt)
+  3. Browser verifies certificate (shows warning for self-signed)
+  4. Both agree on encryption keys (TLS handshake)
+  5. All data encrypted with AES — HTTPS established
+
+OUR SSL SETUP:
+  ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+  ssl_context.load_cert_chain(certfile='server.crt', keyfile='server.key')
+  httpd.socket = ssl_context.wrap_socket(httpd.socket, server_side=True)
+
+CERTIFICATE DETAILS:
+  ┌──────────────────────────────────────────┐
+  │  X.509 Self-Signed Certificate           │
+  │  CN: 10.53.255.177                       │
+  │  Valid: 365 days                         │
+  │  Key: RSA 2048-bit                       │
+  │  SAN: localhost, 127.0.0.1, 10.53.255.177│
+  │  Signed with: SHA-256                    │
+  └──────────────────────────────────────────┘
+
+SAN (Subject Alternative Name) allows the certificate to be
+valid for MULTIPLE hostnames/IPs — so any device on the
+network can connect to https://10.53.255.177:8443 securely.
+</pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 6: 42 FEATURES                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">6. The 42 Input Features — Explained</div>
+  <table>
+    <tr><th>#</th><th>Feature</th><th>Category</th><th>Description</th></tr>
+    <tr><td>1</td><td>fever</td><td>Clinical Symptom</td><td>Patient has elevated body temperature (>38°C)</td></tr>
+    <tr><td>2</td><td>nausea</td><td>Clinical Symptom</td><td>Feeling of sickness/urge to vomit</td></tr>
+    <tr><td>3</td><td>diarrhoea</td><td>Clinical Symptom</td><td>Loose/watery stools — common Ebola symptom</td></tr>
+    <tr><td>4</td><td>asthenia_weakness</td><td>Clinical Symptom</td><td>Extreme muscle weakness/fatigue</td></tr>
+    <tr><td>5</td><td>loss_of_appetite</td><td>Clinical Symptom</td><td>Anorexia — inability/refusal to eat</td></tr>
+    <tr><td>6</td><td>abdominal_pain</td><td>Clinical Symptom</td><td>Stomach/belly cramping or pain</td></tr>
+    <tr><td>7</td><td>chest_pain</td><td>Clinical Symptom</td><td>Pain or discomfort in chest area</td></tr>
+    <tr><td>8</td><td>bone_muscle_pain</td><td>Clinical Symptom</td><td>Myalgia — body and muscle aches</td></tr>
+    <tr><td>9</td><td>joint_pain</td><td>Clinical Symptom</td><td>Arthralgia — pain in joints</td></tr>
+    <tr><td>10</td><td>headache</td><td>Clinical Symptom</td><td>Severe headache — early Ebola sign</td></tr>
+    <tr><td>11</td><td>cough</td><td>Respiratory</td><td>Dry or productive cough</td></tr>
+    <tr><td>12</td><td>breathlessness</td><td>Respiratory</td><td>Difficulty breathing/shortness of breath</td></tr>
+    <tr><td>13</td><td>swallowing_problem</td><td>Clinical Symptom</td><td>Dysphagia — difficulty swallowing</td></tr>
+    <tr><td>14</td><td>sorethroat</td><td>Clinical Symptom</td><td>Pharyngitis — throat inflammation</td></tr>
+    <tr><td>15</td><td>jaundice</td><td>Clinical Symptom</td><td>Yellowing of skin/eyes — liver involvement</td></tr>
+    <tr><td>16</td><td>conjunctivitis</td><td>Clinical Symptom</td><td>Red/inflamed eyes — hemorrhagic sign</td></tr>
+    <tr><td>17</td><td>skin_rash</td><td>Clinical Symptom</td><td>Maculopapular rash — classic Ebola sign</td></tr>
+    <tr><td>18</td><td>hichups</td><td>Clinical Symptom</td><td>Hiccups — severe indicator in Ebola</td></tr>
+    <tr><td>19</td><td>pain_eyes_sensitivity_light</td><td>Clinical Symptom</td><td>Photophobia — light sensitivity</td></tr>
+    <tr><td>20</td><td>coma</td><td>Neurological</td><td>Loss of consciousness — late-stage sign</td></tr>
+    <tr><td>21</td><td>confused_disoriented</td><td>Neurological</td><td>Encephalopathy — brain function impairment</td></tr>
+    <tr><td>22</td><td>bleeding</td><td>Hemorrhagic</td><td>General bleeding — hallmark of EVD</td></tr>
+    <tr><td>23</td><td>bleeding_gum</td><td>Hemorrhagic</td><td>Gum bleeding — hemorrhagic fever sign</td></tr>
+    <tr><td>24</td><td>bleeding_injection_site</td><td>Hemorrhagic</td><td>Prolonged bleeding at IV/injection sites</td></tr>
+    <tr><td>25</td><td>epistaxis</td><td>Hemorrhagic</td><td>Nosebleed — hemorrhagic sign</td></tr>
+    <tr><td>26</td><td>melenas</td><td>Hemorrhagic</td><td>Black tarry stool — internal GI bleeding</td></tr>
+    <tr><td>27</td><td>bleeding_vomit</td><td>Hemorrhagic</td><td>Blood in vomit — serious sign</td></tr>
+    <tr><td>28</td><td>vomito_negro</td><td>Hemorrhagic</td><td>"Black vomit" — severe hemorrhagic symptom</td></tr>
+    <tr><td>29</td><td>hemoptisis</td><td>Hemorrhagic</td><td>Coughing up blood</td></tr>
+    <tr><td>30</td><td>bleeding_vagina</td><td>Hemorrhagic</td><td>Abnormal vaginal bleeding</td></tr>
+    <tr><td>31</td><td>purpura</td><td>Hemorrhagic</td><td>Purple skin patches from blood vessel leakage</td></tr>
+    <tr><td>32</td><td>bleeding_urine</td><td>Hemorrhagic</td><td>Hematuria — blood in urine</td></tr>
+    <tr><td>33</td><td>bleeding_other</td><td>Hemorrhagic</td><td>Other bleeding not classified above</td></tr>
+    <tr><td>34</td><td>contact_EVD_case</td><td>Contact History</td><td>Known contact with confirmed Ebola patient</td></tr>
+    <tr><td>35</td><td>contact_funeral</td><td>Contact History</td><td>Attended funeral of Ebola victim</td></tr>
+    <tr><td>36</td><td>contact_travel</td><td>Contact History</td><td>Travelled to Ebola-affected region</td></tr>
+    <tr><td>37</td><td>contact_HF</td><td>Contact History</td><td>Contact with healthcare facility with EVD cases</td></tr>
+    <tr><td>38</td><td>contact_tradi</td><td>Contact History</td><td>Contact with traditional healer treating EVD</td></tr>
+    <tr><td>39</td><td>contact with animal</td><td>Contact History</td><td>Contact with bats/primates (natural Ebola hosts)</td></tr>
+    <tr><td>40</td><td>sex</td><td>Demographic</td><td>Patient gender (encoded: Male=1, Female=0)</td></tr>
+    <tr><td>41</td><td>age</td><td>Demographic</td><td>Patient age in years</td></tr>
+    <tr><td>42</td><td>Profession</td><td>Demographic</td><td>Occupation (encoded: HCW, farmer, etc.)</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 7: INTERVIEW Q&A                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section page-break">
+  <div class="section-title">7. Interview Questions &amp; Answers</div>
+
+  <!-- BASIC -->
+  <div class="cat-label">🎓 Basic / Introduction Level</div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">1</div>Tell me about your project.</div>
+    <div class="answer">
+      I built an <strong>Ebola Disease Prediction System</strong> — a web-based machine learning application that helps healthcare workers screen patients for Ebola Virus Disease (EVD) risk in real time. The system takes 42 clinical symptoms and contact history inputs through a web form and predicts whether a patient is at high or low risk, along with a confidence percentage.
+      <div class="key">Key Points: ML + Django + HTTPS + 42 features + Real-time prediction + Accessible from any device on the network</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">2</div>What problem does this project solve?</div>
+    <div class="answer">
+      Ebola has a fatality rate up to 90%, and early detection is critical. Traditional diagnosis requires lab tests taking hours. During an outbreak, every minute matters. This system provides <strong>instant AI-powered preliminary screening</strong> that helps:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li>Isolate high-risk patients immediately</li>
+        <li>Allocate medical resources efficiently</li>
+        <li>Enable rapid contact tracing</li>
+        <li>Reduce healthcare worker exposure</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">3</div>What technologies did you use and why?</div>
+    <div class="answer">
+      <table>
+        <tr><th>Technology</th><th>Reason for Choosing</th></tr>
+        <tr><td>Python</td><td>Best ML ecosystem (scikit-learn, NumPy, joblib), integrates with Django</td></tr>
+        <tr><td>Django</td><td>Full-stack Python framework — URL routing, templates, CSRF, ORM built-in</td></tr>
+        <tr><td>scikit-learn</td><td>Industry-standard ML library with VotingClassifier, SVC, RandomForest</td></tr>
+        <tr><td>joblib</td><td>Efficient .pkl serialization — loads 31MB model in milliseconds</td></tr>
+        <tr><td>HTTPS/SSL</td><td>Patient data is sensitive — encryption is mandatory</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- MACHINE LEARNING -->
+  <div class="cat-label">🤖 Machine Learning Questions</div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">4</div>What is Ensemble Learning? Why did you use it?</div>
+    <div class="answer">
+      Ensemble learning combines multiple ML models to produce better predictions than any single model alone. It works on the principle of <strong>"wisdom of the crowd"</strong> — multiple diverse models covering each other's weaknesses.
+      <br><br>I used it because:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li>Medical data is complex — no single model captures all patterns</li>
+        <li>Reduces overfitting and variance</li>
+        <li>More robust to noisy or incomplete data</li>
+        <li>Higher accuracy through combined expertise of SVC, RandomForest, LR, and Decision Tree</li>
+      </ul>
+      <div class="key"><strong>Interview Formula:</strong> Ensemble = Multiple weak learners → One strong learner</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">5</div>What is VotingClassifier? Explain Hard vs Soft Voting.</div>
+    <div class="answer">
+      <code>VotingClassifier</code> is a meta-estimator in scikit-learn that fits multiple classifiers and combines their outputs.
+      <br><br>
+      <table>
+        <tr><th>Type</th><th>Mechanism</th><th>Example</th></tr>
+        <tr><td><strong>Hard Voting</strong></td><td>Each model predicts a class. Majority class wins.</td><td>SVC=1, RF=0, LR=1, DT=1 → Result: 1 (3 vs 1)</td></tr>
+        <tr><td><strong>Soft Voting</strong></td><td>Average predicted probabilities across all models.</td><td>Avg P(positive) = 0.73 &gt; 0.5 → Result: Positive</td></tr>
+      </table>
+      <div class="key"><strong>Soft voting is generally more accurate</strong> because it uses the confidence level of each model's prediction, not just the final class.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">6</div>Explain how SVM/SVC works.</div>
+    <div class="answer">
+      SVC (Support Vector Classifier) finds the <strong>optimal hyperplane</strong> that maximally separates two classes in feature space.
+      <br><br>
+      Key concepts:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li><strong>Support Vectors:</strong> Data points closest to the decision boundary</li>
+        <li><strong>Margin:</strong> Distance between the hyperplane and nearest support vectors — SVM maximizes this</li>
+        <li><strong>Kernel Trick:</strong> Maps data to higher dimensions to find non-linear boundaries (RBF kernel used here)</li>
+        <li><strong>C parameter:</strong> Controls trade-off between margin size and misclassification</li>
+      </ul>
+      <div class="key">Requires StandardScaler — SVM is sensitive to feature scale because it's distance-based.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">7</div>How does Random Forest work?</div>
+    <div class="answer">
+      Random Forest is a <strong>Bagging (Bootstrap Aggregating)</strong> ensemble of Decision Trees.
+      <br><br>Steps:
+      <ol style="padding-left:20px; margin-top:8px;">
+        <li>Create N bootstrap samples (random subsets with replacement)</li>
+        <li>Train one Decision Tree on each sample</li>
+        <li>Each tree also considers a random subset of features at each split</li>
+        <li>For classification: majority vote across all trees</li>
+      </ol>
+      <div class="key">The randomness (data sampling + feature selection) prevents correlation between trees, reducing variance and overfitting.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">8</div>What is StandardScaler and why is it needed?</div>
+    <div class="answer">
+      <code>StandardScaler</code> transforms features to have <strong>zero mean (μ=0) and unit variance (σ=1)</strong>.
+      <br><br>
+      Formula: <code>z = (x - μ) / σ</code>
+      <br><br>
+      Why needed:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li><strong>SVC:</strong> Distance-based — feature with larger range dominates</li>
+        <li><strong>Logistic Regression:</strong> Gradient descent converges faster with scaled features</li>
+        <li>Example: age (0-100) vs fever (0-1) — without scaling, age dominates</li>
+      </ul>
+      <div class="key">Random Forest and Decision Tree do NOT need scaling — they're tree-based and use thresholds, not distances.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">9</div>What is LabelEncoder? When did you use it?</div>
+    <div class="answer">
+      <code>LabelEncoder</code> converts categorical text labels into numerical integers so ML models can process them.
+      <br><br>
+      In our project:
+      <pre>sex: ['Male', 'Female'] → [1, 0]
+Profession: ['Doctor', 'Nurse', 'Farmer', ...] → [0, 1, 2, ...]</pre>
+      <div class="key">Use LabelEncoder for <strong>ordinal</strong> or <strong>binary</strong> categories. For nominal multi-class categories, OneHotEncoder is better to avoid implying false ordinal relationships.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">10</div>What is predict_proba() and how is the confidence score calculated?</div>
+    <div class="answer">
+      <code>predict_proba()</code> returns the <strong>probability estimate</strong> for each class instead of just the predicted class.
+      <pre>probabilities = model.predict_proba([[1,0,1,...]])
+# Returns: [[0.13, 0.87]]
+# 13% chance Negative, 87% chance Positive
+
+confidence = round(max(probabilities[0]) * 100, 2)
+# confidence = 87.0%</pre>
+      <div class="key">Not all classifiers support predict_proba(). SVC requires <code>probability=True</code> at initialization to enable it.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">11</div>What is overfitting and how does ensemble learning prevent it?</div>
+    <div class="answer">
+      <strong>Overfitting:</strong> Model learns training data too well (including noise) and performs poorly on new data.
+      <br><br>
+      Ensemble prevents it by:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li><strong>Diversity:</strong> Different algorithms have different biases — errors cancel out</li>
+        <li><strong>Averaging (Bagging):</strong> Random Forest averages many trees → variance drops</li>
+        <li><strong>Combining:</strong> If one model overfits, others compensate through voting</li>
+      </ul>
+      <div class="key">Bias-Variance Tradeoff: Ensemble reduces variance (overfitting) while maintaining low bias.</div>
+    </div>
+  </div>
+
+  <!-- DJANGO -->
+  <div class="cat-label">🌐 Django / Web Framework Questions</div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">12</div>Why Django? What are its key features?</div>
+    <div class="answer">
+      Django is a <strong>batteries-included</strong> Python web framework. Key features used in this project:
+      <table style="margin-top:10px;">
+        <tr><th>Feature</th><th>Use in Project</th></tr>
+        <tr><td>URL Routing</td><td>urls.py maps / and /predict/ to views</td></tr>
+        <tr><td>Views</td><td>views.py handles ML logic and returns response</td></tr>
+        <tr><td>Templates</td><td>index.html renders dynamic prediction results</td></tr>
+        <tr><td>CSRF Protection</td><td>Prevents cross-site request forgery on POST</td></tr>
+        <tr><td>Management Commands</td><td>Custom runhttps command for HTTPS server</td></tr>
+        <tr><td>ORM / SQLite</td><td>Database layer (ready for contact tracing data)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">13</div>What is a Django management command? How did you create one?</div>
+    <div class="answer">
+      Django management commands are custom CLI commands run with <code>python manage.py &lt;command&gt;</code>. I created <code>runhttps</code> because the built-in <code>runserver</code> doesn't support HTTPS and the <code>django-sslserver</code> package uses deprecated APIs removed in Python 3.12+.
+      <pre>Directory structure:
+core/
+  management/
+    __init__.py
+    commands/
+      __init__.py
+      runhttps.py   ← Our custom command
+
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ssl_context.load_cert_chain(...)
+        httpd.socket = ssl_context.wrap_socket(...)</pre>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">14</div>How is the ML model loaded and why is it loaded at startup?</div>
+    <div class="answer">
+      The model is loaded <strong>once at module level</strong> in views.py, not inside the view function:
+      <pre># views.py — TOP LEVEL (loaded once)
+ensemble_model = joblib.load(os.path.join(MODEL_DIR, 'ensemble_model.pkl'))
+
+# NOT inside the predict function — that would reload 31MB every request!</pre>
+      <strong>Why at startup?</strong>
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li>Loading 31MB model takes ~2-3 seconds</li>
+        <li>Loading on every request would make the app very slow</li>
+        <li>At module level, it loads once when Django starts and stays in memory</li>
+      </ul>
+      <div class="key">This is a critical performance optimization — always load heavy models at startup.</div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="cat-label">🔐 Security / HTTPS Questions</div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">15</div>How did you implement HTTPS? What is SSL/TLS?</div>
+    <div class="answer">
+      <strong>SSL/TLS</strong> is a cryptographic protocol that encrypts data between client and server.
+      <br><br>Implementation steps:
+      <ol style="padding-left:20px; margin-top:8px;">
+        <li>Generated RSA 2048-bit private key using <code>cryptography</code> library</li>
+        <li>Created X.509 self-signed certificate with IP SAN</li>
+        <li>Created <code>ssl.SSLContext</code> with <code>PROTOCOL_TLS_SERVER</code></li>
+        <li>Loaded cert and key into SSLContext</li>
+        <li>Wrapped WSGI server socket with SSL</li>
+      </ol>
+      <div class="key">Why custom implementation? <code>django-sslserver</code> uses <code>ssl.wrap_socket()</code> which was removed in Python 3.12. We use the modern <code>ssl.SSLContext</code> API.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">16</div>What is a Subject Alternative Name (SAN) and why did you use it?</div>
+    <div class="answer">
+      SAN is an X.509 certificate extension that specifies additional hostnames or IP addresses the certificate covers.
+      <br><br>
+      Without SAN — browsers reject the certificate even if the IP matches the Common Name (CN).
+      <br><br>
+      Our certificate has SAN for:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li><code>localhost</code> — for this PC</li>
+        <li><code>127.0.0.1</code> — loopback IP</li>
+        <li><code>10.53.255.177</code> — local network IP for other devices</li>
+      </ul>
+      <div class="key">Since Chrome 58 (2017), browsers require SAN — CN alone is no longer sufficient for certificate validation.</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">17</div>Why does the browser show a security warning for your app?</div>
+    <div class="answer">
+      Our certificate is <strong>self-signed</strong> — meaning we signed it ourselves rather than having it signed by a trusted Certificate Authority (CA) like DigiCert, Let's Encrypt, or Comodo.
+      <br><br>
+      Browser trust chain:
+      <pre>Trusted CA (DigiCert) → Intermediate CA → Website Certificate ✅ Trusted
+Our App (self-signed) → No CA chain → ⚠️ Browser Warning</pre>
+      <div class="key">For production, you'd use a free certificate from <strong>Let's Encrypt</strong>. Self-signed is fine for development and internal network use. The data IS encrypted — the warning is only about identity verification.</div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <div class="cat-label">⚡ Challenges &amp; Problem-Solving Questions</div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">18</div>What challenges did you face and how did you solve them?</div>
+    <div class="answer">
+      <strong>Challenge 1: django-sslserver incompatible with Python 3.13</strong><br>
+      <em>Problem:</em> <code>ssl.wrap_socket()</code> removed in Python 3.12+<br>
+      <em>Solution:</em> Created custom <code>runhttps</code> management command using <code>ssl.SSLContext</code> API
+      <br><br>
+      <strong>Challenge 2: scikit-learn version mismatch</strong><br>
+      <em>Problem:</em> Model trained with sklearn 1.7.1, deployed with 1.9.0 → InconsistentVersionWarning<br>
+      <em>Solution:</em> For production, retrain with the target version; for development, warnings are non-fatal
+      <br><br>
+      <strong>Challenge 3: Feature name warnings in prediction</strong><br>
+      <em>Problem:</em> Model trained with named DataFrame columns but inference used raw NumPy array<br>
+      <em>Solution:</em> Either retrain with NumPy arrays or pass data as DataFrame with column names
+      <br><br>
+      <strong>Challenge 4: UnicodeEncodeError on Windows terminal</strong><br>
+      <em>Problem:</em> Windows cp1252 console can't encode emoji characters in print statements<br>
+      <em>Solution:</em> Replaced all emoji with ASCII-safe equivalents
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">19</div>How would you improve this project for production deployment?</div>
+    <div class="answer">
+      <ul style="padding-left:20px;">
+        <li><strong>Use Gunicorn/uWSGI:</strong> Replace Django dev server with production WSGI server</li>
+        <li><strong>Add Nginx:</strong> Reverse proxy to handle SSL termination and static files</li>
+        <li><strong>Let's Encrypt SSL:</strong> Replace self-signed cert with trusted CA certificate</li>
+        <li><strong>Docker:</strong> Containerize for easy deployment and environment consistency</li>
+        <li><strong>PostgreSQL:</strong> Replace SQLite with production-grade database</li>
+        <li><strong>Retrain Model:</strong> Retrain with matched scikit-learn version to eliminate warnings</li>
+        <li><strong>Input Validation:</strong> Add server-side validation for all 42 features</li>
+        <li><strong>Authentication:</strong> Add login system — patient data is sensitive</li>
+        <li><strong>Logging:</strong> Add Django logging for audit trails (healthcare compliance)</li>
+        <li><strong>API:</strong> Expose a REST API endpoint for integration with hospital systems</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">20</div>What is joblib and why is it better than pickle for ML models?</div>
+    <div class="answer">
+      Both joblib and pickle serialize Python objects. joblib is preferred for ML models because:
+      <table style="margin-top:10px;">
+        <tr><th>Feature</th><th>joblib</th><th>pickle</th></tr>
+        <tr><td>Large NumPy arrays</td><td>✅ Memory-mapped, very fast</td><td>❌ Slow, loads entirely into RAM</td></tr>
+        <tr><td>Compression</td><td>✅ Built-in compression</td><td>❌ No compression</td></tr>
+        <tr><td>Parallel processing</td><td>✅ Optimized for sklearn</td><td>❌ Standard</td></tr>
+        <tr><td>ML model support</td><td>✅ Designed for sklearn</td><td>⚠️ Works but slower</td></tr>
+      </table>
+      <pre>import joblib
+# Save model
+joblib.dump(model, 'ensemble_model.pkl')
+# Load model
+model = joblib.load('ensemble_model.pkl')</pre>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">21</div>What is CSRF and how does Django handle it?</div>
+    <div class="answer">
+      <strong>CSRF (Cross-Site Request Forgery)</strong> is an attack where a malicious site tricks a user's browser into making unauthorized requests to another site where the user is authenticated.
+      <br><br>
+      Django's protection:
+      <ul style="padding-left:20px; margin-top:8px;">
+        <li>Generates a unique <strong>CSRF token</strong> for each session</li>
+        <li>Embeds it in forms: <code>{% csrf_token %}</code></li>
+        <li>Validates the token on every POST request</li>
+        <li>Request without valid token → 403 Forbidden</li>
+      </ul>
+      <div class="key">In our form's HTML: <code>&lt;form method="POST"&gt; {% csrf_token %} ... &lt;/form&gt;</code></div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">22</div>What is the difference between supervised and unsupervised learning? Which did you use?</div>
+    <div class="answer">
+      <table>
+        <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>Supervised</strong></td><td>Model trained on labeled data (input-output pairs)</td><td>Our project: symptoms → Positive/Negative</td></tr>
+        <tr><td><strong>Unsupervised</strong></td><td>Model finds patterns in unlabeled data</td><td>Clustering patients by symptom similarity</td></tr>
+        <tr><td><strong>Semi-supervised</strong></td><td>Mix of labeled and unlabeled data</td><td>Using labeled EVD + unlabeled suspected cases</td></tr>
+      </table>
+      <br>
+      We used <strong>Supervised Learning — Binary Classification</strong> with labeled dataset (1 = EVD Positive, 0 = EVD Negative).
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">23</div>How did you evaluate your model's performance?</div>
+    <div class="answer">
+      Standard classification metrics:
+      <table style="margin-top:10px;">
+        <tr><th>Metric</th><th>Formula</th><th>Importance in Medical AI</th></tr>
+        <tr><td><strong>Accuracy</strong></td><td>(TP+TN)/(TP+TN+FP+FN)</td><td>Overall correctness</td></tr>
+        <tr><td><strong>Precision</strong></td><td>TP/(TP+FP)</td><td>Among predicted positive — how many truly positive?</td></tr>
+        <tr><td><strong>Recall (Sensitivity)</strong></td><td>TP/(TP+FN)</td><td>Of all actual EVD cases — how many did we catch? ← Most critical!</td></tr>
+        <tr><td><strong>F1 Score</strong></td><td>2×(P×R)/(P+R)</td><td>Balance between precision and recall</td></tr>
+        <tr><td><strong>AUC-ROC</strong></td><td>Area under ROC curve</td><td>Overall discrimination ability</td></tr>
+      </table>
+      <div class="key"><strong>In medical AI, Recall/Sensitivity is most critical.</strong> A False Negative (missing an Ebola case) is far more dangerous than a False Positive (unnecessary isolation).</div>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">24</div>What is the difference between classification and regression?</div>
+    <div class="answer">
+      <table>
+        <tr><th>Classification</th><th>Regression</th></tr>
+        <tr><td>Predicts a <strong>category/class</strong></td><td>Predicts a <strong>continuous value</strong></td></tr>
+        <tr><td>Output: Positive/Negative (0 or 1)</td><td>Output: Temperature = 38.5°C</td></tr>
+        <tr><td>Our project uses this</td><td>Used for predicting ICU days, recovery time</td></tr>
+        <tr><td>Metrics: Accuracy, F1, AUC</td><td>Metrics: MSE, RMSE, R²</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="question"><div class="qnum">25</div>What is cross-validation and did you use it?</div>
+    <div class="answer">
+      <strong>Cross-Validation (k-fold)</strong> splits data into k equal parts, trains on k-1 parts and tests on the remaining 1 part, repeating k times. It gives a more reliable accuracy estimate than a single train/test split.
+      <pre># 5-fold cross validation example
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(model, X, y, cv=5, scoring='f1')
+print(f"F1: {scores.mean():.3f} ± {scores.std():.3f}")</pre>
+      <div class="key">Cross-validation ensures the model doesn't overfit to a particular train/test split and gives confidence the model generalizes well.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 8: QUICK REFERENCE CHEAT SHEET        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section page-break">
+  <div class="section-title">8. Interview Cheat Sheet — Key Points to Remember</div>
+
+  <div class="highlight success">
+    <strong>✅ Always say these things in your introduction:</strong><br>
+    "I built an Ebola Disease Prediction System using Django and Ensemble Machine Learning. It takes 42 clinical symptoms and contact history inputs, runs them through a VotingClassifier combining SVC, Random Forest, Logistic Regression, and Decision Tree, and outputs a Positive/Negative result with confidence score. The system is secured with HTTPS and accessible from any device on the network."
+  </div>
+
+  <div class="highlight warning">
+    <strong>⚡ Quick Definitions to Memorize:</strong><br>
+    • <strong>Ensemble Learning</strong> = Combining multiple models for better accuracy<br>
+    • <strong>VotingClassifier</strong> = Meta-estimator that aggregates predictions by majority vote or probability averaging<br>
+    • <strong>StandardScaler</strong> = Normalize features to μ=0, σ=1 (needed for SVM &amp; LR)<br>
+    • <strong>joblib.load()</strong> = Load serialized ML model from .pkl file<br>
+    • <strong>predict_proba()</strong> = Returns probability for each class (used for confidence score)<br>
+    • <strong>SSL/TLS</strong> = Encrypts data between browser and server<br>
+    • <strong>SAN</strong> = Certificate extension for multiple IPs/hostnames<br>
+    • <strong>CSRF Token</strong> = Prevents unauthorized POST requests in Django
+  </div>
+
+  <div class="highlight danger">
+    <strong>🎯 Differentiators — What makes your project stand out:</strong><br>
+    1. Used Ensemble of 4 different algorithms — not just one model<br>
+    2. Implemented HTTPS with Python 3.13-compatible ssl.SSLContext (solved ssl.wrap_socket deprecation)<br>
+    3. Generated SSL cert with SAN for LAN accessibility from any device<br>
+    4. Model loaded at startup (not per-request) — performance optimization<br>
+    5. Custom management command — shows Django extensibility knowledge<br>
+    6. Medical domain — demonstrates real-world impact awareness
+  </div>
+
+  <table>
+    <tr><th>Question</th><th>One-Line Answer</th></tr>
+    <tr><td>Why Ensemble?</td><td>Reduces overfitting, combines strengths of 4 different algorithms</td></tr>
+    <tr><td>Why Django?</td><td>Full-stack Python framework, integrates seamlessly with scikit-learn</td></tr>
+    <tr><td>Why joblib?</td><td>Faster than pickle for large NumPy arrays in ML models</td></tr>
+    <tr><td>Why 42 features?</td><td>Covers all EVD symptom categories: clinical, hemorrhagic, neurological, contact, demographic</td></tr>
+    <tr><td>Why HTTPS?</td><td>Patient medical data is sensitive — encryption is non-negotiable</td></tr>
+    <tr><td>Why SAN in cert?</td><td>Modern browsers require SAN for certificate validation (CN alone rejected since Chrome 58)</td></tr>
+    <tr><td>Why 0.0.0.0?</td><td>Binds to all network interfaces — enables access from any device on the LAN</td></tr>
+    <tr><td>Why StandardScaler?</td><td>SVM and LR are distance-based/gradient-based — sensitive to feature scale</td></tr>
+    <tr><td>Most critical metric?</td><td>Recall/Sensitivity — missing an Ebola case (FN) is more dangerous than false alarm</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  Ebola Disease Prediction System — Complete Project Guide<br>
+  Generated for Interview Preparation · Django + Ensemble ML + HTTPS
+</div>
+
+</div><!-- end page -->
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebola Disease Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .main-card { border: none; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); overflow: hidden; }
+        .card-header-custom { background: linear-gradient(135deg, #c0392b, #8e1a12); padding: 24px 32px; color: white; }
+        .card-header-custom h3 { font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; }
+        .section-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #c0392b; border-bottom: 2px solid #f0d0cd; padding-bottom: 6px; margin-bottom: 16px; }
+        .form-label { font-size: 0.82rem; font-weight: 600; color: #444; margin-bottom: 4px; }
+        .form-select, .form-control { border-radius: 8px; border: 1px solid #ddd; font-size: 0.88rem; padding: 7px 12px; }
+        .form-select:focus, .form-control:focus { border-color: #c0392b; box-shadow: 0 0 0 0.2rem rgba(192,57,43,0.15); }
+        .btn-predict { background: linear-gradient(135deg, #c0392b, #8e1a12); color: white; border: none; border-radius: 10px; padding: 12px 48px; font-size: 1rem; font-weight: 700; transition: all 0.3s ease; }
+        .btn-predict:hover { background: linear-gradient(135deg, #a93226, #7b1510); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(192,57,43,0.35); color: white; }
+        .result-positive { background: linear-gradient(135deg, #fff5f5, #ffe0de); border-left: 6px solid #c0392b; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .result-negative { background: linear-gradient(135deg, #f0fff4, #d4edda); border-left: 6px solid #27ae60; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .result-label { font-size: 2rem; font-weight: 800; }
+        .disclaimer { background: #fff8e1; border-left: 4px solid #f39c12; border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.8rem; color: #7d6608; }
+        .section-block { background: #fafafa; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; border: 1px solid #f0f0f0; }
+    </style>
+</head>
+<body>
+<div class="container my-5 pb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            {% if submitted and prediction %}
+            <div class="{% if prediction == 'Positive' %}result-positive{% else %}result-negative{% endif %}">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                    <div>
+                        <div class="text-muted mb-1" style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Prediction Result</div>
+                        <div class="result-label {% if prediction == 'Positive' %}text-danger{% else %}text-success{% endif %}">
+                            {% if prediction == 'Positive' %}⚠ Ebola Positive{% else %}✓ Ebola Negative{% endif %}
+                        </div>
+                        <p class="mt-2 mb-0 text-secondary">{{ message }}</p>
+                    </div>
+                    <div>
+                        <span class="badge {% if prediction == 'Positive' %}bg-danger{% else %}bg-success{% endif %}" style="font-size:0.9rem;padding:8px 16px;border-radius:20px;">
+                            Confidence: {{ confidence }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-danger rounded-3">{{ error }}</div>
+            {% endif %}
+
+            <div class="main-card card">
+                <div class="card-header-custom">
+                    <h3 class="mb-1">🦠 Ebola Disease Prediction</h3>
+                    <p style="font-size:0.9rem;opacity:0.85;margin:0;">Enter the patient's symptoms and exposure history for AI-powered risk assessment</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="disclaimer mb-4">
+                        <strong>⚕ Medical Disclaimer:</strong> This tool is for informational/research purposes only and does not constitute medical advice. Always consult a qualified healthcare professional for diagnosis and treatment.
+                    </div>
+
+                    <form method="POST" action="/predict/">
+                        {% csrf_token %}
+
+                        <!-- GENERAL SYMPTOMS -->
+                        <div class="section-block">
+                            <div class="section-title">General Symptoms</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Fever</label>
+                                    <select name="fever" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Nausea</label>
+                                    <select name="nausea" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Diarrhoea</label>
+                                    <select name="diarrhoea" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Asthenia / Weakness</label>
+                                    <select name="asthenia_weakness" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Loss of Appetite</label>
+                                    <select name="loss_of_appetite" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Jaundice</label>
+                                    <select name="jaundice" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Skin Rash</label>
+                                    <select name="skin_rash" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Hiccups</label>
+                                    <select name="hichups" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Conjunctivitis</label>
+                                    <select name="conjunctivitis" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                            </div>
+                        </div>
+
+                        <!-- PAIN SYMPTOMS -->
+                        <div class="section-block">
+                            <div class="section-title">Pain Symptoms</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Abdominal Pain</label>
+                                    <select name="abdominal_pain" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Chest Pain</label>
+                                    <select name="chest_pain" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Bone / Muscle Pain</label>
+                                    <select name="bone_muscle_pain" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Joint Pain</label>
+                                    <select name="joint_pain" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Headache</label>
+                                    <select name="headache" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Eye Pain / Light Sensitivity</label>
+                                    <select name="pain_eyes_sensitivity_light" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                            </div>
+                        </div>
+
+                        <!-- RESPIRATORY -->
+                        <div class="section-block">
+                            <div class="section-title">Respiratory &amp; Throat Symptoms</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Cough</label>
+                                    <select name="cough" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Breathlessness</label>
+                                    <select name="breathlessness" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Swallowing Problem</label>
+                                    <select name="swallowing_problem" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Sore Throat</label>
+                                    <select name="sorethroat" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                            </div>
+                        </div>
+
+                        <!-- NEUROLOGICAL -->
+                        <div class="section-block">
+                            <div class="section-title">Neurological Symptoms</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Coma</label>
+                                    <select name="coma" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Confused / Disoriented</label>
+                                    <select name="confused_disoriented" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                            </div>
+                        </div>
+
+                        <!-- BLEEDING -->
+                        <div class="section-block">
+                            <div class="section-title">Haemorrhagic / Bleeding Symptoms</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Bleeding (General)</label>
+                                    <select name="bleeding" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Bleeding Gums</label>
+                                    <select name="bleeding_gum" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Bleeding at Injection Site</label>
+                                    <select name="bleeding_injection_site" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Epistaxis (Nosebleed)</label>
+                                    <select name="epistaxis" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Melena (Black Stool)</label>
+                                    <select name="melenas" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Bleeding in Vomit</label>
+                                    <select name="bleeding_vomit" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Vomito Negro</label>
+                                    <select name="vomito_negro" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Hemoptysis (Blood in Sputum)</label>
+                                    <select name="hemoptisis" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Vaginal Bleeding</label>
+                                    <select name="bleeding_vagina" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Purpura</label>
+                                    <select name="purpura" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Blood in Urine</label>
+                                    <select name="bleeding_urine" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Other Bleeding</label>
+                                    <select name="bleeding_other" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                            </div>
+                        </div>
+
+                        <!-- EXPOSURE -->
+                        <div class="section-block">
+                            <div class="section-title">Exposure &amp; Contact History</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Contact with EVD Case</label>
+                                    <select name="contact_EVD_case" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Contact at Funeral</label>
+                                    <select name="contact_funeral" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Travel to Affected Area</label>
+                                    <select name="contact_travel" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Contact at Health Facility</label>
+                                    <select name="contact_HF" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Contact with Traditional Healer</label>
+                                    <select name="contact_tradi" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Contact with Animal</label>
+                                    <select name="contact with animal" class="form-select"><option value="1">Yes</option><option value="0" selected>No</option></select></div>
+                            </div>
+                        </div>
+
+                        <div class="section-block">
+                            <div class="section-title">Patient Information</div>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Sex</label>
+                                    <select name="sex" class="form-select"><option value="1">Male</option><option value="0">Female</option></select></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Age</label>
+                                    <input type="number" name="age" class="form-control" min="0" max="120" value="30" placeholder="e.g. 35"></div>
+                                <div class="col-6 col-md-4 col-lg-3"><label class="form-label">Profession</label>
+                                    <select name="Profession" class="form-select">
+                                        <option value="0">General Public</option>
+                                        <option value="1">Healthcare Worker</option>
+                                        <option value="2">Other</option>
+                                    </select></div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-predict">🔬 Predict Risk</button>
+                            <a href="/" class="btn btn-outline-secondary ms-3 px-4" style="border-radius:10px;padding:12px 32px;">Reset</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <p class="text-center text-white-50 mt-3" style="font-size:0.78rem;">
+                Powered by Ensemble Machine Learning (VotingClassifier) · For research use only
+            </p>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
